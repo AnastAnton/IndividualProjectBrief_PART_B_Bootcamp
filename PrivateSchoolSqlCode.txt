@@ -1,0 +1,227 @@
+CREATE DATABASE `privateschool`;
+
+USE `privateschool`;
+
+CREATE TABLE `Courses` (`id` INT AUTO_INCREMENT, `title` varchar(20) NOT NULL, `stream` varchar(20) NOT NULL, 
+		        `type` varchar(20) NOT NULL, `start_date` date NOT NULL, `end_date` date NOT NULL,
+  			PRIMARY KEY (`id`));
+
+CREATE TABLE `Students` (`id` INT AUTO_INCREMENT, `first_name` varchar(20) NOT NULL, `last_name` varchar(20) NOT NULL,
+	                 `date_of_birth` date NOT NULL, `tuition_fees` double(10,2),
+  			 PRIMARY KEY (`id`));
+
+CREATE TABLE `Trainers` (`id` INT AUTO_INCREMENT, `first_name` varchar(20) NOT NULL, `last_name` varchar(20) NOT NULL, 
+			 `subject` varchar(20) NOT NULL,
+                         PRIMARY KEY (`id`));
+
+CREATE TABLE `Assignments` (`id` INT AUTO_INCREMENT, `title` varchar(20) NOT NULL, `description` varchar(200) NOT NULL, 
+			    `sub_date_time` date NOT NULL, `oral_mark` int, `total_mark` int,
+  			    PRIMARY KEY (`id`));
+
+CREATE TABLE `StudentsPerCourses` (`id` INT PRIMARY KEY AUTO_INCREMENT, `students_id` INT NOT NULL, `courses_id` INT NOT NULL, `student_on_course` varchar(50) NOT NULL,
+				   CONSTRAINT `FK_StudentsPerCourses_Students_ID__Students_ID` FOREIGN KEY (`students_id`) 
+			           REFERENCES `Students` (`id`),
+				   CONSTRAINT `FK_StudentsPerCourses_Courses_ID__Courses_ID` FOREIGN KEY (`courses_id`) 
+			           REFERENCES `Courses` (`id`));
+
+CREATE TABLE `TrainersPerCourses` (`id` INT PRIMARY KEY AUTO_INCREMENT, `trainers_id` INT NOT NULL, `courses_id` INT NOT NULL,
+				   CONSTRAINT `FK_TrainersPerCourses_Trainers_ID__Trainers_ID` FOREIGN KEY (`trainers_id`) 
+			           REFERENCES `Trainers` (`id`),
+				   CONSTRAINT `FK_TrainersPerCourses_Courses_ID__Courses_ID` FOREIGN KEY (`courses_id`) 
+			           REFERENCES `Courses` (`id`));
+
+CREATE TABLE `AssignmentsPerCourses` (`id` INT PRIMARY KEY AUTO_INCREMENT, `assignments_id` INT NOT NULL, `courses_id` INT NOT NULL,
+				   CONSTRAINT `FK_AssignmentsPerCourses_Assignments_ID__Assignments_ID` FOREIGN KEY (`assignments_id`) 
+			           REFERENCES `Assignments` (`id`),
+				   CONSTRAINT `FK_AssignmentsPerCourses_Courses_ID__Courses_ID` FOREIGN KEY (`courses_id`) 
+			           REFERENCES `Courses` (`id`));
+
+CREATE TABLE `AssignmentsPerCoursesPerStudents` (`id` INT PRIMARY KEY AUTO_INCREMENT, `students_per_courses_id` INT NOT NULL,
+						 `assignments_id` INT NOT NULL,
+						 CONSTRAINT `FK_AssPerCourPerStud_StudPerCour_ID__StudPerCour_ID` FOREIGN KEY (`students_per_courses_id`) 
+			           		 REFERENCES `AssignmentsPerCourses` (`id`),
+				  		 CONSTRAINT `FK_AssPerCourPerStud_Ass_ID__Ass_ID` FOREIGN KEY (`assignments_id`) 
+			          		 REFERENCES `Assignments` (`id`));
+
+INSERT INTO courses (title, stream, type, start_date, end_date) 
+	     VALUES ('CB12', 'Java', 'Full time', '2020-10-20', '2021-01-20'),
+		    ('CB12', 'C#', 'Full time', '2020-10-20', '2021-01-20'),
+		    ('CB11', 'JavaScript', 'Part time', '2020-03-25', '2020-09-25'),
+	            ('CB11', 'Python', 'Full time', '2020-03-25', '2020-6-25'),
+		    ('CB10', 'Java', 'Full time', '2019-10-20', '2020-01-20');
+
+
+INSERT INTO students (first_name , last_name, date_of_birth, tuition_fees)
+	      VALUES ('Anastasios', 'Antonopoulos', '1994-12-30', 2500),
+		     ('Maria', 'Fostiropoulou', '1993-06-15', 2500),
+		     ('Alexandros', 'Ageridis', '1992-08-07', 2500),
+		     ('Konstantinos', 'Kousounis', '1995-04-02', 2500),
+		     ('Vasilios', 'Liapis', '1990-11-14', 2500),
+		     ('Nicole', 'Tsarouha', '1985-12-15', 2500),
+		     ('Andreas', 'Lianos', '1990-05-20', 2500),
+		     ('Ilya', 'Kraev', '1998-10-11', 2500),
+		     ('Anastasia-Antigoni', 'Minaidou', '1987-01-15', 2500),
+		     ('Lefteris', 'Papadogiannis', '1990-11-04', 2500),
+		     ('Michalis', 'Karvelas', '1990-03-03', 2500),
+		     ('Andreas', 'Sketzos', '1994-04-22', 2500),
+		     ('Alexandros', 'Lambrakis', '1989-06-17', 2500),
+		     ('Konstantinos', 'Vakouftsis', '1984-04-27', 2500),
+		     ('Dimitris', 'Kasimatis', '1992-02-28', 2500),
+		     ('Dimitris', 'Triantafullou', '1994-05-11', 2500),
+		     ('George', 'Kokolakis', '1990-11-14', 2500),
+		     ('Giannis', 'Grigoriou', '1987-12-06', 2500),
+		     ('Tania', 'Karageorgi', '1988-08-24', 2500),
+		     ('Spiros', 'Kalogeris', '1992-01-18', 2500),
+		     ('Spiros', 'Christantonis', '1990-07-14', 2500),
+		     ('Anastasios', 'Vassilopoulos', '1986-05-29', 2500),
+		     ('Christina', 'Panoutsou', '1995-04-09', 2500),
+		     ('Katerina', 'Michou', '1989-02-25', 2500),
+		     ('Panagiotis', 'Aggelopoulos', '1994-05-16', 2500);
+
+
+INSERT INTO trainers (first_name, last_name, subject)
+	      VALUES ('Vladimiros', 'Fotiadis', 'Java'),
+		     ('George', 'Pasparakis', 'Java'),
+		     ('George', 'Pasparakis', 'C#'),
+		     ('Nerina', 'Pyrovolikou', 'Python'),
+		     ('Vladimiros', 'Fotiadis', 'JavaScript');
+
+INSERT INTO assignments (title, description, sub_date_time, oral_mark, total_mark)
+	      VALUES ('Assignment_1', 'Create a class in Java', '2020-11-05', 100, 100),
+		     ('Assignment_2', 'Create a constructor in a class in Java', '2020-11-15', 100, 100),
+		     ('Assignment_3', 'Create a class with methods in  Java', '2020-11-25', 100, 100),
+		     ('Assignment_4', 'Create an Abstract in Java', '2020-12-05', 100, 100),
+		     ('Assignment_5', 'Create an Abstract and an Interface in Java', '2020-12-15', 100, 100),
+		     ('Individual Project', 'Create a private school in Java', '2020-12-30', 100, 100),
+		     ('Team Project', 'Create a web site in Java', '2021-01-10', 100, 100),
+		     ('Assignment_1', 'Create a class in C#', '2020-11-05', 100, 100),
+		     ('Assignment_2', 'Create a constructor in a class in C#', '2020-11-15', 100, 100),
+		     ('Assignment_3', 'Create a class with methods C#', '2020-11-25', 100, 100),
+		     ('Assignment_4', 'Create an Abstract in C#', '2020-12-05', 100, 100),
+		     ('Assignment_5', 'Create an Abstract and an Interface in C#', '2020-12-15', 100, 100),
+		     ('Individual Project', 'Create a private school in C#', '2020-12-30', 100, 100),
+		     ('Team Project', 'Create a web site in C#', '2021-01-10', 100, 100),
+		     ('Assignment_1', 'Create a class in JavaScript', '2020-04-05', 100, 100),
+		     ('Assignment_2', 'Create a constructor in a class in JavaScript', '2020-04-25', 100, 100),
+		     ('Assignment_3', 'Create a class with methods in JavaScript', '2020-05-10', 100, 100),
+		     ('Assignment_4', 'Create an Abstract in JavaScript', '2020-05-25', 100, 100),
+		     ('Assignment_5', 'Create an Abstract and an Interface in JavaScript', '2020-06-15', 100, 100),
+		     ('Individual Project', 'Create a private school in JavaScript', '2020-07-30', 100, 100),
+		     ('Team Project', 'Create a web site in JavaScript', '2021-08-30', 100, 100),
+		     ('Assignment_1', 'Create a class in Python', '2020-04-05', 100, 100),
+		     ('Assignment_2', 'Create a constructor in a class in Python', '2020-04-15', 100, 100),
+		     ('Assignment_3', 'Create a class with methods in Python', '2020-04-25', 100, 100),
+		     ('Assignment_4', 'Create an Abstract in Python', '2020-05-05', 100, 100),
+		     ('Assignment_5', 'Create an Abstract and an Interface in Python', '2020-05-15', 100, 100),
+		     ('Individual Project', 'Create a private school in Python', '2020-05-30', 100, 100),
+		     ('Team Project', 'Create a web site in Python', '2021-06-10', 100, 100),
+		     ('Assignment_1', 'Create a class in Java', '2019-11-05', 100, 100),
+		     ('Assignment_2', 'Create a constructor in a class in Java', '2019-11-15', 100, 100),
+		     ('Assignment_3', 'Create a class with methods in Java', '2019-11-25', 100, 100),
+		     ('Assignment_4', 'Create an Abstract in Java', '2019-12-05', 100, 100),
+		     ('Assignment_5', 'Create an Abstract and an Interface in Java', '2019-12-15', 100, 100),
+		     ('Individual Project', 'Create a private school in Java', '2019-12-30', 100, 100),
+		     ('Team Project', 'Create a web site in Java', '2020-01-10', 100, 100);
+
+INSERT INTO StudentsPerCourses (students_id, courses_id, student_on_course) 
+			 VALUES (1, 1, 'Anastasios_Antonopoulos_CB12_Java_Full'), (2, 1, 'Maria_Fostiropoulou_CB12_Java_Full'), 
+			        (3, 1, 'Alexandros_Ageridis_CB12_Java_Full'), (4, 1, 'Konstantinos_Kousounis_CB12_Java_Full'), 
+				(5, 1, 'Vasilios_Liapis_CB12_Java_Full'), (5, 4, 'Vasilios_Liapis_CB11_Python_Full'),
+				(6, 2, 'Nicole_Tsarouha_CB12_C#_Full'), (7, 2, 'Andreas_Lianos_CB12_C#_Full'), 
+				(8, 2, 'Ilya_Kraev_CB12_C#_Full'), (9, 2, 'Anastasia-Antigoni_Minaidou_CB12_C#_Full'), (10, 2, 'Lefteris_Papadogiannis_CB12_C#_Full'),
+				(11, 3, 'Michalis_Karvelas_CB11_JavaScript_Part'), (12, 3, 'Andreas_Sketzos_CB11_JavaScript_Part'), 
+				(13, 3, 'Alexandros_Lambrakis_CB11_JavaScript_Part'), 
+				(14, 3, 'Konstantinos_Vakouftsis_CB11_JavaScript_Part'), (14, 5, 'Konstantinos_Vakouftsis_CB10_Java_Part'), 
+				(15, 4, 'Dimitris_Kasimatis_CB11_Python_Full'), (16, 4, 'Dimitris_Triantafullou_CB11_Python_Full'), 
+				(17, 4, 'George_Kokolakis_CB11_Python_Full'), (18, 4, 'Giannis_Grigoriou_CB11_Python_Full'), (19, 4, 'Tania_Karageorgi_CB11_Python_Full'),
+				(20, 5, 'Spiros_Kalogeris_CB10_Java_Part'), (21, 5, 'Spiros_Christantonis_CB10_Java_Part'), (21, 2, 'Spiros_Christantonis_CB12_C#_Full'),
+				(22, 5, 'Anastasios_Vassilopoulos_CB10_Java_Part'), (23, 5, 'Christina_Panoutsou_CB10_Java_Part'), 
+				(24, 5, 'Katerina_Michou_CB10_Java_Part'), (25, 5, 'Panagiotis_Aggelopoulos_CB10_Java_Part');
+
+INSERT INTO TrainersPerCourses (trainers_id, courses_id)
+			 VALUES (1, 1), (2, 5), (3,2), (4, 4), (5, 3);
+
+INSERT INTO AssignmentsPerCourses (assignments_id, courses_id)
+			 VALUES (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1),
+				(8, 2), (9, 2), (10, 2), (11, 2), (12, 2), (13, 2), (14, 2),
+				(15, 3), (16, 3), (17, 3), (18, 3), (19, 3), (20, 3), (21, 3),
+				(22, 4), (23, 4), (24, 4), (25, 4), (26, 4), (27, 4), (28, 4),
+				(29, 5), (30, 5), (31, 5), (32, 5), (33, 5), (34, 5), (35, 5);
+
+INSERT INTO AssignmentsPerCoursesPerStudents (students_per_courses_id, assignments_id)
+			 VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7),
+				(2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7),
+				(3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), 
+				(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7),
+				(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7),
+				(6, 22), (6, 23), (6, 24), (6, 25), (6, 26), (6, 27), (6, 28),
+				(7, 8), (7, 9), (7, 10), (7, 11), (7, 12), (7, 13), (7, 14),
+				(8, 8), (8, 9), (8, 10), (8, 11), (8, 12), (8, 13), (8, 14),
+				(9, 8), (9, 9), (9, 10), (9, 11), (9, 12), (9, 13), (9, 14), 
+				(10, 8), (10, 9), (10, 10), (10, 11), (10, 12), (10, 13), (10, 14),
+				(11, 8), (11, 9), (11, 10), (11, 11), (11, 12), (11, 13), (11, 14),
+				(12, 15), (12, 16), (12, 17), (12, 18), (12, 19), (12, 20), (12, 21),
+				(13, 15), (13, 16), (13, 17), (13, 18), (13, 19), (13, 20), (13, 21),
+				(14, 15), (14, 16), (14, 17), (14, 18), (14, 19), (14, 20), (14, 21),
+				(15, 15), (15, 16), (15, 17), (15, 18), (15, 19), (15, 20), (15, 21),
+				(16, 29), (16, 30), (16, 31), (16, 32), (16, 33), (16, 34), (16, 35),
+				(17, 22), (17, 23), (17, 24), (17, 25), (17, 26), (17, 27), (17, 28),
+				(18, 22), (18, 23), (18, 24), (18, 25), (18, 26), (18, 27), (18, 28),
+				(19, 22), (19, 23), (19, 24), (19, 25), (19, 26), (19, 27), (19, 28),
+				(20, 22), (20, 23), (20, 24), (20, 25), (20, 26), (20, 27), (20, 28),
+				(21, 22), (21, 23), (21, 24), (21, 25), (21, 26), (21, 27), (21, 28),
+				(22, 29), (22, 30), (22, 31), (22, 32), (22, 33), (22, 34), (22, 35),
+				(23, 29), (23, 30), (23, 31), (23, 32), (23, 33), (23, 34), (23, 35),
+				(24, 8), (24, 9), (24, 10), (24, 11), (24, 12), (24, 13), (24, 14),
+				(25, 29), (25, 30), (25, 31), (25, 32), (25, 33), (25, 34), (25, 35),
+				(26, 29), (26, 30), (26, 31), (26, 32), (26, 33), (26, 34), (26, 35),
+				(27, 29), (27, 30), (27, 31), (27, 32), (27, 33), (27, 34), (27, 35),
+				(28, 29), (28, 30), (28, 31), (28, 32), (28, 33), (28, 34), (28, 35);
+
+
+SELECT * FROM `Students`;
+
+SELECT * FROM `Trainers`;
+
+SELECT * FROM `Assignments`;
+
+SELECT * FROM `Courses`;
+
+SELECT StudentsPerCourses.id, first_name, last_name, title, stream, type 
+  FROM `StudentsPerCourses`
+  INNER JOIN Students
+    ON Students.id = students_id
+  INNER JOIN Courses
+    ON Courses.id = courses_id
+  ORDER BY StudentsPerCourses.id ASC;
+
+SELECT TrainersPerCourses.id, first_name, last_name, title, stream, type
+  FROM `TrainersPerCourses` 
+  INNER JOIN Trainers
+    ON Trainers.id = trainers_id
+  INNER JOIN Courses
+    ON Courses.id = courses_id;
+
+SELECT AssignmentsPerCourses.id, Assignments.title, description, sub_date_time, Courses.title, stream, type
+  FROM `AssignmentsPerCourses`
+  INNER JOIN Assignments
+    ON Assignments.id = assignments_id
+  INNER JOIN Courses
+    ON Courses.id = courses_id;
+
+SELECT acs.id, student_on_course, title, description, sub_date_time, oral_mark, total_mark
+  FROM `AssignmentsPerCoursesPerStudents` AS acs
+  INNER JOIN StudentsPerCourses AS sc
+    ON sc.id = acs.students_per_courses_id
+  INNER JOIN Assignments AS a
+    ON a.id = acs.assignments_id;
+
+SELECT Students.id AS students_id, first_name, last_name
+  FROM `StudentsPerCourses`
+  INNER JOIN Students
+    ON Students.id = students_id
+  INNER JOIN Courses
+    ON Courses.id = courses_id
+  GROUP BY first_name, last_name
+  HAVING COUNT(*) > 1
+  ORDER BY StudentsPerCourses.id ASC;
