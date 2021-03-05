@@ -1,2 +1,2 @@
 # Individual_Project_PART_B_Bootcamp
- Individual Project PART B Bootcamp
+An Individual project for Coding Bootcamp, applying OOP principles and Database design
